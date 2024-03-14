@@ -4,7 +4,7 @@ An attribution model is a framework used in marketing and analytics to assign cr
 
 Some Attribution models I used:
 
-#Last Interaction (or Last Click): This model gives all the credit for a conversion to the last touchpoint that the customer interacted with before converting. It's straightforward but can overlook earlier touchpoints that contributed to the conversion.
+# 1 Last Interaction (or Last Click): This model gives all the credit for a conversion to the last touchpoint that the customer interacted with before converting. It's straightforward but can overlook earlier touchpoints that contributed to the conversion.
 
 #First Interaction (or First Click): In contrast to the last interaction model, this model gives all the credit to the first touchpoint that introduced the customer to the product or service. It's useful for understanding how customers initially discover a brand.
 
