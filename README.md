@@ -1,6 +1,7 @@
 # Attribution model for Marketing Analysis
 
 An attribution model is a framework used in marketing and analytics to assign credit to various touchpoints along a customer's journey that lead to a desired outcome, such as a conversion or sale. In the complex landscape of digital marketing, customers often interact with multiple channels and touchpoints before making a purchase or completing a desired action. Attribution models help businesses understand which marketing channels or touchpoints are most influential in driving conversions.
+Choosing the right attribution model depends on factors such as the complexity of your sales funnel, the length of your typical customer journey, and your marketing objectives. Additionally, it's essential to continually analyze and refine your attribution model to ensure it accurately reflects the dynamics of your marketing efforts and customer behavior.
 
 Some Attribution models I used:
 
