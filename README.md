@@ -22,3 +22,24 @@ Also known as the U-shaped model, this attribution model assigns 40% of the cred
 
 ### 6.Custom Models: 
 Some businesses develop custom attribution models tailored to their specific needs and understanding of their customer journey. These models often combine elements of various standard models or incorporate additional factors unique to the business.
+
+# The number of features you can use in an attribution model 
+depends on several factors, including the complexity of your marketing ecosystem, the granularity of your data, and the computational resources available. Here are some considerations:
+
+Number of Touchpoints: One of the primary features in an attribution model is the various touchpoints or channels through which customers interact with your marketing efforts. The more touchpoints you have, the more features you'll need to represent them in your model.
+
+Granularity of Data: You may have access to additional data beyond just touchpoints, such as time of interaction, customer demographics, campaign attributes, etc. Each additional piece of data can be considered a feature in your attribution model.
+
+Interactions and Time Decay: You might want to include interactions between touchpoints or apply time decay to give more weight to recent interactions. These can add complexity to your model and increase the number of features.
+
+Resource Constraints: Depending on the computational resources available, there may be practical limits to the number of features you can include in your model. Large datasets with many features can require significant processing power and memory.
+
+Model Complexity vs. Overfitting: As you add more features to your attribution model, you increase its complexity. However, overly complex models may suffer from overfitting, where the model learns to capture noise in the data rather than the underlying patterns. It's essential to strike a balance between model complexity and predictive performance.
+
+Dimensionality Reduction Techniques: If you have a large number of features, you may consider using dimensionality reduction techniques such as Principal Component Analysis (PCA) or feature selection methods to identify the most informative features and reduce computational complexity.
+
+It's essential to consider the trade-offs between model complexity, computational resources, and predictive performance. Start with the most relevant features based on your understanding of the customer journey and iteratively refine your model as needed.
+
+
+
+
