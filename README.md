@@ -41,5 +41,6 @@ Dimensionality Reduction Techniques: If you have a large number of features, you
 It's essential to consider the trade-offs between model complexity, computational resources, and predictive performance. Start with the most relevant features based on your understanding of the customer journey and iteratively refine your model as needed.
 
 
+![Last-Touch Attribution Model Rplot](https://github.com/IrinaMax/Attribution-Model/assets/16123495/b73c5888-450d-4d61-afda-a64edbaea8ed)
 
 
