@@ -1,0 +1,78 @@
+#This is my code with created 150 rows of sinthetic data for  Last-Touch Attribution Model
+
+# The plot for yhis ,odel is also on the
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
+
+# Generate synthetic data with different conversion rates for each touchpoint
+set.seed(125)  # for reproducibility
+visitor_ids <- 1:150
+timestamps <- as.POSIXct("2023-01-01") + sample(1:365, 150, replace = TRUE)
+
+# Define touchpoints and their conversion rates
+touchpoint_conversion_rates <- c("Organic Search" = 0.15, 
+                                 "Paid Search" = 0.25, 
+                                 "Social Media" = 0.1, 
+                                 "Email" = 0.2, 
+                                 "Direct" = 0.3, 
+                                 "Referral" = 0.05)
+
+# Generate touchpoints based on their conversion rates
+touchpoints <- sample(names(touchpoint_conversion_rates), 150, replace = TRUE, prob = touchpoint_conversion_rates)
+touchpoints
+
+# Generate conversion status for each line based on touchpoint's conversion rate
+conversion_status <- sapply(touchpoints, function(tp) {
+  sample(c(0, 1), 1, prob = c(1 - touchpoint_conversion_rates[tp], touchpoint_conversion_rates[tp]))
+})
+conversion_status
+# Create synthetic data frame
+synthetic_data <- tibble(
+  visitor_id = visitor_ids,
+  timestamp = timestamps,
+  touchpoint = touchpoints,
+  conversion_status = conversion_status
+)
+synthetic_data
+# Step 2: Aggregate Visitor Journeys
+visitor_paths <- synthetic_data %>%
+  group_by(visitor_id) %>%
+  arrange(timestamp) %>%
+  summarise(journey = paste(touchpoint, collapse = ' -> '))
+visitor_paths
+
+# Step 3: Define Attribution Model
+# Example: Last-Touch Attribution Model
+attribution_model <- function(journey) {
+  last_touch <- tail(strsplit(journey, ' -> ')[[1]], 1)
+  return(last_touch)
+}
+
+# Step 4: Apply Attribution Model
+visitor_paths$attribution <- sapply(visitor_paths$journey, attribution_model)
+visitor_paths$attribution
+# Step 5: Calculate Attribution Scores
+# attribution_scores <- visitor_paths %>%
+#   group_by(attribution) %>%
+#   summarise(conversions = sum(synthetic_data$conversion_status))  # Use original data to calculate conversions
+
+# Step 5: Calculate Attribution Scores
+attribution_scores <- visitor_paths %>%
+  group_by(attribution) %>%
+  summarise(conversions = sum(ifelse(synthetic_data$touchpoint == attribution, synthetic_data$conversion_status, 0)))  # Sum conversions where touchpoint matches attribution
+
+attribution_scores
+
+# Step 6: Visualize Attribution Results
+ggplot(attribution_scores, aes(x = attribution, y = conversions)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "Attribution Results", x = "Touchpoint", y = "Conversions") +
+  theme_minimal()
+
+ggplot(attribution_scores, aes(x = attribution, y = conversions, fill = attribution)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Attribution Results by Channel", x = "Channel", y = "Conversions") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels for better readability
+
