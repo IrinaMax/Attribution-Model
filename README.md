@@ -43,5 +43,6 @@ It's essential to consider the trade-offs between model complexity, computationa
 
 ![Last-Touch Attribution Model Rplot](https://github.com/IrinaMax/Attribution-Model/assets/16123495/b73c5888-450d-4d61-afda-a64edbaea8ed)
 
-[Time Decay Attribution model barplot.pdf](https://github.com/IrinaMax/Attribution-Model/files/14784542/Time.Decay.Attribution.model.barplot.pdf)
+![Time Decay Attribution model barplot.pdf](https://github.com/IrinaMax/Attribution-Model/files/14784554/Time.Decay.Attribution.model.barplot.pdf)
+
 
