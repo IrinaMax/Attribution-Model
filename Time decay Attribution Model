@@ -1,0 +1,50 @@
+# This is code example of Time decay Attribution Model
+
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
+
+# Sample data generation
+set.seed(123)
+touchpoints <- c("Organic Search", "Paid Search", "Social Media", "Email", "Direct", "Referral")
+customer_journeys <- replicate(100, sample(touchpoints, sample(1:6, 1), replace = TRUE))
+timestamps <- sample(seq(as.POSIXct("2023-01-01"), as.POSIXct("2023-12-31"), by = "day"), 100, replace = TRUE)
+
+# Ensure equal length for customer journeys and timestamps
+max_length <- max(length(customer_journeys), length(timestamps))
+customer_journeys <- lapply(customer_journeys, function(x) c(x, rep(NA, max_length - length(x))))
+timestamps <- c(timestamps, rep(NA, max_length - length(timestamps)))
+
+# Convert customer journeys to data frame
+df <- data.frame(customer_id = 1:100, journey = unlist(customer_journeys), timestamp = timestamps)
+
+# Remove rows with NA timestamps
+df <- df[complete.cases(df), ]
+
+# Define the time decay function
+time_decay <- function(timestamp, max_timestamp) {
+  days_diff <- as.numeric(max_timestamp - timestamp, units = "days")
+  weight <- exp(-0.05 * days_diff)  # Adjust decay rate as needed
+  return(weight)
+}
+
+# Apply time decay to each touchpoint in a journey
+apply_time_decay <- function(journey, timestamps) {
+  max_timestamp <- max(timestamps)
+  decayed_values <- sapply(timestamps, function(ts) time_decay(ts, max_timestamp))
+  return(sum(decayed_values))
+}
+
+# Apply time decay attribution model to each customer journey
+attribution_results <- df %>%
+  group_by(customer_id) %>%
+  summarise(
+    total_weight = apply_time_decay(journey, timestamp)
+  ) %>%
+  mutate(attribution = total_weight / sum(total_weight))
+
+# Summarize attribution scores
+attribution_scores <- attribution_results$attribution
+
+# Visualize attribution results
+barplot(attribution_scores, names.arg = touchpoints, main = "Time Decay Attribution", xlab = "Touchpoint", ylab = "Attribution Score")
