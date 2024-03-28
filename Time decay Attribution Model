@@ -1,4 +1,9 @@
-# This is code example of Time decay Attribution Model
+# This is code example of Time decay Attribution Model with steps
+1. I generate sample customer journeys and timestamps for each customer.
+2. Define a time decay function that calculates the weight (or influence) of each touchpoint based on its timestamp relative to the maximum timestamp in the journey.
+3. Apply the time decay function to each touchpoint in a journey to calculate the total weight of all touchpoints.
+4. Normalize the total weights to get the attribution scores for each touchpoint.
+5. Visualize the attribution scores using a bar plot.
 
 # Load necessary libraries
 library(dplyr)
