@@ -45,4 +45,5 @@ It's essential to consider the trade-offs between model complexity, computationa
 
 ![Time_Decay Attribution Model Barplot](https://github.com/IrinaMax/Attribution-Model/assets/16123495/4082a4a8-3a50-4244-804c-414db3e08c9d)
 
+![Shapley Method for Attribution model Plot](https://github.com/IrinaMax/Attribution-Model/assets/16123495/40bbe54c-e2cb-4bb9-85fa-ee0c93a390eb)
 
