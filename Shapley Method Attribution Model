@@ -1,0 +1,77 @@
+# ---------------- Shapley Attribution model------------
+# the Shapley attribution model aims to assign credit to touchpoints based on their marginal contributions to the overall conversion.
+
+> # Load necessary libraries
+> library(dplyr)
+> # Sample data generation
+> set.seed(123)
+> touchpoints <- c("Organic Search", "Paid Search", "Social Media", "Email", "Direct", "Referral")
+> customer_journeys <- replicate(100, sample(touchpoints, sample(1:6, 1), replace = TRUE))
+> timestamps <- sample(seq(as.POSIXct("2023-01-01"), as.POSIXct("2023-12-31"), by = "day"), 100, replace = TRUE)
+> # Ensure equal length for customer journeys and timestamps
+> max_length <- max(length(customer_journeys), length(timestamps))
+> customer_journeys <- lapply(customer_journeys, function(x) c(x, rep(NA, max_length - length(x))))
+> timestamps <- c(timestamps, rep(NA, max_length - length(timestamps)))
+> # Convert customer journeys to data frame
+> df <- data.frame(customer_id = 1:100, journey = unlist(customer_journeys), timestamp = timestamps)
+> df %>%  head
+  customer_id      journey           timestamp
+1           1     Referral 2023-06-07 01:00:00
+2           2 Social Media 2023-07-08 01:00:00
+3           3  Paid Search 2023-11-07 00:00:00
+4           4         <NA> 2023-07-08 01:00:00
+5           5         <NA> 2023-02-26 00:00:00
+6           6         <NA> 2023-02-07 00:00:00
+> df %>% dim
+[1] 10000     3
+> # Remove rows with NA timestamps
+> df <- df[complete.cases(df), ]
+> df %>%  head
+    customer_id      journey           timestamp
+1             1     Referral 2023-06-07 01:00:00
+2             2 Social Media 2023-07-08 01:00:00
+3             3  Paid Search 2023-11-07 00:00:00
+101           1     Referral 2023-06-07 01:00:00
+102           2 Social Media 2023-07-08 01:00:00
+201           1        Email 2023-06-07 01:00:00
+> df %>% dim
+[1] 353   3
+> # Load necessary libraries
+> library(gtools)  # For permutations
+> # Define function to calculate Shapley value for each touchpoint
+> calculate_shapley <- function(touchpoint, journey, timestamps) {
++   N <- length(journey)
++   S <- combinations(N, N)
++   contributions <- numeric(nrow(S))
++   
++   # Pad journey with NAs if its length is less than the number of combinations
++   if (length(journey) < nrow(S)) {
++     journey <- c(journey, rep(NA, nrow(S) - length(journey)))
++   }
++   
++   for (i in 1:nrow(S)) {
++     # Determine the subset of journey where the touchpoint is present
++     subset_journey <- journey[S[i,]]
++     # Calculate the number of conversions where the touchpoint is present
++     conversions <- sum(subset_journey == touchpoint, na.rm = TRUE)
++     # Calculate the total weight (time decay) for the subset
++     total_weight <- sum(sapply(timestamps[S[i,]], function(ts) time_decay(ts, max(timestamps))), na.rm = TRUE)
++     # Calculate the contribution of the touchpoint in the subset
++     contributions[i] <- conversions * total_weight
++   }
++   
++   shapley_value <- mean(contributions)
++   
++   return(shapley_value)
++ }
+# The contribution of each touchpoint based on the number of conversions where the touchpoint is present in the subset of the journey and the total weight (time decay) of the subset. 
+# This should lead to different Shapley values for each touchpoint, resulting in distinct bar plots in the visualization.
+
+
+> # Apply Shapley attribution model to each touchpoint
+> shapley_results <- sapply(touchpoints, function(tp) calculate_shapley(tp, df$journey, df$timestamp))
+> shapley_results
+Organic Search    Paid Search   Social Media          Email         Direct       Referral 
+      4243.224       4175.871       3771.755       3569.696       3771.755       4243.224 
+> # Visualize Shapley attribution results
+> barplot(shapley_results, names.arg = touchpoints, main = "Shapley Attribution", xlab = "Touchpoint", ylab = "Shapley Value")
