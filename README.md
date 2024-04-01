@@ -47,3 +47,4 @@ It's essential to consider the trade-offs between model complexity, computationa
 
 ![Shapley Method for Attribution model Plot3](https://github.com/IrinaMax/Attribution-Model/assets/16123495/db663dfd-93cd-4166-a03f-9b1fe8abb8a8)
 
+![First-Touch Attribution Results](https://github.com/IrinaMax/Attribution-Model/assets/16123495/1e60107d-9333-42d4-836c-f31ae1680c25)
