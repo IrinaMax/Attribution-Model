@@ -3,6 +3,16 @@
 aggregates the attribution results, and finally plots the attribution results in a bar plot.
 # This data is generated specifcally for this method, the matrix can be wider and dipper.
 
+The First Interaction (or First Click) attribution model attributes the entire conversion credit to the first touchpoint encountered by the user in their journey. 
+This model assumes that the first interaction plays the most significant role in influencing the conversion decision, disregarding any subsequent touchpoints.
+First Interaction attribution model works in 3 basic steps:
+
+Assigning Credit: In this model, all credit for a conversion is assigned to the first touchpoint that the user interacts with in their journey. Regardless of how many additional touchpoints the user interacts with before converting, only the first touchpoint receives credit for the conversion.
+
+Simplicity: The First Interaction model is straightforward and easy to implement. It is based on the principle that the first touchpoint is the most influential in driving the conversion.
+
+Limitations: While the First Interaction model provides a clear and simple way to attribute conversions, it may oversimplify the customer journey by ignoring the potential impact of subsequent touchpoints. It may not accurately reflect the true influence of all touchpoints leading to the conversion.
+
 # Generate synthetic data with visitor journeys consisting of multiple touchpoints
 set.seed(125)  # for reproducibility
 visitor_ids <- 1:150
