@@ -1,0 +1,147 @@
+# Chi_squared test  for calculate stat significance
+
+To test for the significance of the difference between groups at baseline, can be use hypothesis testing. 
+Example data:
+
+TREATED (received marketing, measured product ownership before and after test was conducted)
+
+N = 150,000
+% that own product before marketing = 55.0%
+% that own the product after marketing = 57.5%
+CONTROL (did not receive marketing, but we measured product ownership before and after the test was conducted as well)
+
+N = 50,000
+% that own product before = 53.2% *(statistically different than TREATED's 55%)
+% that own the product after = 56.2%
+Since you have categorical data (ownership of the product) measured before and after the marketing test, you can perform a chi-squared test for independence.
+
+Conduct the test:
+Formulate hypotheses:--------Null hypothesis (H0): There is no difference in the proportions of product ownership between the treated and control groups before the marketing intervention.
+Alternative hypothesis (H1): --------There is a difference in the proportions of product ownership between the treated and control groups before the marketing intervention.
+Calculate expected frequencies:
+Calculate the expected frequencies for each cell in the contingency table under the assumption of independence.
+
+Compute the chi-squared statistic:
+Use the formula for the chi-squared statistic to compare the observed and expected frequencies.
+
+Determine the p-value:
+Use the chi-squared statistic and the degrees of freedom to determine the p-value associated with the test.
+
+Make a decision:
+Compare the p-value to a predetermined significance level (e.g., α = 0.05). If the p-value is less than α, reject the null hypothesis and conclude that there is a significant difference in the proportions of product ownership between the treated and control groups at baseline.
+
+Code example of how to perform the chi-squared test in R:
+#========================= Chi-squared test
+# Observed frequencies
+treated_before <- 0.55 * 150000
+control_before <- 0.532 * 50000
+
+# Total counts
+total_treated <- 150000
+total_control <- 50000
+
+# Expected frequencies
+expected_treated <- total_treated * 0.55
+expected_control <- total_control * 0.532
+
+# Create contingency table
+observed <- matrix(c(treated_before, control_before, total_treated - treated_before, total_control - control_before), nrow = 2, byrow = TRUE)
+
+# Perform chi-squared test
+chisq_test <- chisq.test(observed)
+
+# Print results
+print(chisq_test)
+
+# Pearson's Chi-squared test with Yates' continuity correction
+# 
+# data:  observed
+# X-squared = 48.933, df = 1, p-value = 2.648e-12
+
+# Observed and expected frequencies
+observed <- c(treated_before, control_before)
+expected <- c(expected_treated, expected_control)
+
+# Touchpoint labels
+touchpoints <- c("Treated", "Control")
+
+# Create a bar plot
+barplot(rbind(observed, expected), beside = TRUE, col = c("blue", "orange"), 
+        names.arg = touchpoints, 
+        legend.text = c("Observed", "Expected"), 
+        main = "Observed vs Expected Frequencies",
+        xlab = "Group", 
+        ylab = "Frequency")
+
+# Add a legend
+legend("topright", legend = c("Observed", "Expected"), fill = c("blue", "orange"))
+
+
+
+
+# Define group labels
+group_labels <- c("Before Marketing", "After Marketing")
+
+# Create a bar plot
+barplot(rbind(observed, expected), beside = TRUE, col = c("blue", "orange"), 
+        names.arg = touchpoints, 
+        legend.text = group_labels, 
+        main = "Observed vs Expected Frequencies",
+        xlab = "Group", 
+        ylab = "Frequency", 
+        ylim = c(0, max(c(observed, expected)) + 10000))
+
+# Add a legend
+legend("topright", legend = group_labels, fill = c("blue", "orange"))
+
+
+
+
+
+# Create positions for bars
+pos <- barplot(rbind(observed, expected), beside = TRUE, col = c("blue", "orange"), 
+               names.arg = touchpoints, 
+               legend.text = group_labels, 
+               main = "Observed vs Expected Frequencies",
+               xlab = "Group", 
+               ylab = "Frequency", 
+               ylim = c(0, max(c(observed, expected)) + 10000))
+
+# Add a legend
+legend("topright", legend = group_labels, fill = c("blue", "orange"))
+
+# Add labels for each bar
+text(pos, observed + 2000, labels = observed, pos = 3, col = "blue")
+text(pos, expected + 2000, labels = expected, pos = 3, col = "orange")
+
+
+#4
+# Observed and expected frequencies
+observed <- c(treated_before, control_before)
+expected <- c(expected_treated, expected_control)
+
+# Touchpoint labels
+touchpoints <- c("Treated", "Control")
+
+# Define group labels
+group_labels <- c("Observed", "Expected")
+
+# Create positions for bars
+pos <- barplot(rbind(observed, expected), beside = TRUE, col = c("blue", "orange"), 
+               names.arg = touchpoints, 
+               legend.text = group_labels, 
+               main = "Observed vs Expected Frequencies",
+               xlab = "Group", 
+               ylab = "Frequency", 
+               ylim = c(0, max(c(observed, expected)) + 10000))
+
+# Add labels for each bar
+text(pos - 0.2, treated_before + 2000, labels = treated_before, pos = 3, col = "blue")
+text(pos + 0.2, control_before + 2000, labels = control_before, pos = 3, col = "blue")
+text(pos - 0.2, expected_treated + 2000, labels = expected_treated, pos = 3, col = "orange")
+text(pos + 0.2, expected_control + 2000, labels = expected_control, pos = 3, col = "orange")
+
+# Add a legend
+legend("topright", legend = group_labels, fill = c("blue", "orange"))
+
+
