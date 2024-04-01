@@ -1,0 +1,104 @@
+# This code presenting the First-Touch Attribution model method.
+# It generates visitor journeys, simulates conversions based on touchpoint conversion rates, applies the first-touch attribution model to each visitor, 
+aggregates the attribution results, and finally plots the attribution results in a bar plot.
+# This data is generated specifcally for this method, the matrix can be wider and dipper.
+
+# Generate synthetic data with visitor journeys consisting of multiple touchpoints
+set.seed(125)  # for reproducibility
+visitor_ids <- 1:150
+timestamps <- as.POSIXct("2023-01-01") + sample(1:365, 150, replace = TRUE)
+
+# Define touchpoints and their conversion rates
+touchpoint_conversion_rates <- c("Organic Search" = 0.15, 
+                                 "Paid Search" = 0.25, 
+                                 "Social Media" = 0.1, 
+                                 "Email" = 0.2, 
+                                 "Direct" = 0.3, 
+                                 "Referral" = 0.05)
+
+# Generate visitor journeys consisting of fixed length (e.g., 3 touchpoints)
+visitor_journeys <- lapply(1:150, function(x) sample(names(touchpoint_conversion_rates), 3, replace = TRUE))
+
+# Generate conversion status for each touchpoint based on their conversion rates
+conversions <- sapply(visitor_journeys, function(journey) {
+  sapply(journey, function(tp) sample(c(0, 1), 1, prob = c(1 - touchpoint_conversion_rates[tp], touchpoint_conversion_rates[tp])))
+})
+
+# # Create synthetic data frame
+# synthetic_data <- data.frame(
+#   visitor_id = visitor_ids,
+#   timestamp = timestamps,
+#   journey = I(visitor_journeys),  # Use I() to preserve list structure
+#   conversion_status = I(conversions),  # Use I() to preserve list structure
+#   stringsAsFactors = FALSE
+# )
+
+# Repeat visitor_id and timestamp values for each touchpoint within a visitor's journey
+expanded_data <- lapply(1:150, function(i) {
+  data.frame(
+    visitor_id = rep(visitor_ids[i], 3),
+    timestamp = rep(timestamps[i], 3),
+    journey = visitor_journeys[[i]],
+    conversion_status = conversions[[i]],
+    stringsAsFactors = FALSE
+  )
+})
+
+# Combine the expanded data frames into a single data frame
+synthetic_data <- do.call(rbind, expanded_data)
+synthetic_data %>% head
+# visitor_id           timestamp        journey conversion_status
+# 1          1 2023-01-01 00:04:46 Organic Search                 0
+# 2          1 2023-01-01 00:04:46   Social Media                 0
+# 3          1 2023-01-01 00:04:46          Email                 0
+# 4          2 2023-01-01 00:03:11 Organic Search                 0
+# 5          2 2023-01-01 00:03:11   Social Media                 0
+# 6          2 2023-01-01 00:03:11   Social Media                 0
+# Function to calculate first-touch attribution
+calculate_first_touch_attribution <- function(journey, conversion_status) {
+  attribution <- rep(0, length(journey))  # Initialize attribution vector
+  
+  # Find the index of the first touchpoint where conversion occurred
+  first_conversion_index <- which(conversion_status == 1)[1]
+  
+  # Assign attribution to the first touchpoint with conversion
+  if (!is.na(first_conversion_index)) {
+    attribution[first_conversion_index] <- 1
+  }
+  
+  return(attribution)
+}
+
+# Apply first-touch attribution model to each visitor 0/1
+synthetic_data$attribution <- mapply(calculate_first_touch_attribution, synthetic_data$journey, synthetic_data$conversion_status)
+
+# Aggregate attribution results
+attribution_summary <- aggregate(synthetic_data$attribution, by = list(Touchpoint = synthetic_data$journey), FUN = sum)
+attribution_summary
+# Touchpoint  x
+# 1         Direct 13
+# 2          Email 12
+# 3 Organic Search 12
+# 4    Paid Search  9
+# 5       Referral 13
+# 6   Social Media 13
+# Rename columns
+colnames(attribution_summary) <- c("Touchpoint", "Conversions")
+
+# Sort by touchpoint conversion rates
+attribution_summary <- attribution_summary[order(touchpoint_conversion_rates[attribution_summary$Touchpoint], decreasing = TRUE), ]
+attribution_summary
+# Touchpoint  x
+# 1         Direct 16
+# 2          Email 14
+# 3 Organic Search 13
+# 4    Paid Search  5
+# 5       Referral  7
+# 6   Social Media  5
+# Plot attribution results
+barplot(attribution_summary$Conversions, names.arg = attribution_summary$Touchpoint, 
+        main = "First-Touch Attribution Results", xlab = "Touchpoint", ylab = "Conversions", col = "skyblue")
+
+# Plot attribution results with color
+barplot(attribution_summary$Conversions, names.arg = attribution_summary$Touchpoint, 
+        main = "First-Touch Attribution Results", xlab = "Touchpoint", ylab = "Conversions", col = rainbow(length(attribution_summary$Conversions)))
