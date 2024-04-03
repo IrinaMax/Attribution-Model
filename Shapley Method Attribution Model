@@ -1,5 +1,24 @@
 # ---------------- Shapley Attribution model------------
-# the Shapley attribution model aims to assign credit to touchpoints based on their marginal contributions to the overall conversion.
+# The Shapley Value Method, borrowed from cooperative game theory, is a concept used in attribution modeling to assign credit to each touchpoint in a customer's journey based on their incremental contribution to the final outcome (e.g., conversion or purchase). The Shapley Value represents the average marginal contribution of each touchpoint across all possible permutations of touchpoints in the customer journey.
+
+Here's how the Shapley Value Method works:
+
+Permutation of Touchpoints: The method considers all possible permutations of touchpoints in the customer journey, including permutations where some touchpoints may occur multiple times or not at all.
+
+Incremental Contribution: For each permutation, the incremental contribution of each touchpoint is calculated as the difference in the outcome (e.g., conversion rate) with and without the touchpoint included in the sequence.
+
+Average Marginal Contribution: The Shapley Value is computed as the average marginal contribution of each touchpoint across all permutations, taking into account the varying order and combination of touchpoints.
+
+Credit Assignment: The Shapley Value assigns credit to each touchpoint proportional to its average marginal contribution to the outcome, reflecting its importance in influencing the final conversion.
+
+Implementing the Shapley Value Method in attribution modeling involves calculating the incremental contribution of each touchpoint in various permutations of the customer journey and averaging these contributions across all permutations. This process can be computationally intensive for large datasets with many touchpoints, but it provides a more comprehensive understanding of each touchpoint's impact on the outcome.
+
+A basic outline of how you can implement the Shapley Value Method in R:
+
+1.Generate all possible permutations of touchpoints in the customer journey.
+2.Calculate the incremental contribution of each touchpoint in each permutation.
+3.Average the marginal contributions across all permutations to compute the Shapley Value for each touchpoint.
+4.Assign credit to touchpoints based on their Shapley Values.
 
 > # Load necessary libraries
 > library(dplyr)
