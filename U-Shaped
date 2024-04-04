@@ -1,6 +1,7 @@
-The Position-Based (U-Shaped) attribution model assigns credit to multiple touchpoints along the customer journey, giving more weight to the first and last touchpoints while also considering intermediate touchpoints. This model acknowledges that different touchpoints may play distinct roles in influencing conversions, with the first and last interactions often being the most impactful.
+The Position-Based (U-Shaped) attribution model assigns credit to multiple touchpoints along the customer journey, giving more weight to the first and last touchpoints while also considering intermediate touchpoints. 
+This model acknowledges that different touchpoints may play distinct roles in influencing conversions, with the first and last interactions often being the most impactful.
 
-Here's how the Position-Based (U-Shaped) attribution model works:
+How the Position-Based (U-Shaped) attribution model works:
 
 Assigning Credit: In this model, credit is distributed among multiple touchpoints in the customer journey. The first and last touchpoints typically receive more credit, while intermediate touchpoints also receive some credit.
 
