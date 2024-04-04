@@ -1,0 +1,99 @@
+The Position-Based (U-Shaped) attribution model assigns credit to multiple touchpoints along the customer journey, giving more weight to the first and last touchpoints while also considering intermediate touchpoints. This model acknowledges that different touchpoints may play distinct roles in influencing conversions, with the first and last interactions often being the most impactful.
+
+Here's how the Position-Based (U-Shaped) attribution model works:
+
+Assigning Credit: In this model, credit is distributed among multiple touchpoints in the customer journey. The first and last touchpoints typically receive more credit, while intermediate touchpoints also receive some credit.
+
+Weighting Scheme: A common weighting scheme for the Position-Based model is the "U-shaped" or "bathtub-shaped" curve, where the first and last touchpoints each receive 40% of the credit, and the remaining 20% is distributed evenly among the intermediate touchpoints.
+
+Flexibility: The model allows for flexibility in adjusting the weights assigned to different touchpoints based on domain knowledge or data analysis. For example, you may choose to assign more weight to the last touchpoint if it's considered particularly influential in driving conversions.
+
+Interpretability: The Position-Based model provides insights into the relative importance of different touchpoints in the customer journey, making it useful for understanding the customer's path to conversion.
+
+Implementing the Position-Based (U-Shaped) attribution model involves defining the weighting scheme and applying it to assign credit to each touchpoint in the customer journey. Here's a basic outline of how you can implement this model in R:
+
+1.Define the weighting scheme, specifying the percentage of credit assigned to the first, last, and intermediate touchpoints.
+2.Assign credit to each touchpoint based on its position in the customer journey, using the defined weighting scheme.
+3.Aggregate the attribution results to analyze the overall impact of different touchpoints on conversions.
+4.Visualize the attribution results to gain insights into the contribution of each touchpoint.
+
+
+# Assuming the same sinthetic data as I generated for First touch I define a weighting scheme where the first and last touchpoints 
+#receive 40% of the credit each, and the remaining 20% is distributed evenly among the intermediate touchpoints.
+
+# Generate synthetic data with visitor journeys consisting of multiple touchpoints
+set.seed(125)  # for reproducibility
+visitor_ids <- 1:150
+timestamps <- as.POSIXct("2023-01-01") + sample(1:365, 150, replace = TRUE)
+
+# Define touchpoints and their conversion rates
+touchpoint_conversion_rates <- c("Organic Search" = 0.15, 
+                                 "Paid Search" = 0.25, 
+                                 "Social Media" = 0.1, 
+                                 "Email" = 0.2, 
+                                 "Direct" = 0.3, 
+                                 "Referral" = 0.05)
+
+# Generate visitor journeys consisting of fixed length (e.g., 3 touchpoints)
+visitor_journeys <- lapply(1:150, function(x) sample(names(touchpoint_conversion_rates), 3, replace = TRUE))
+
+# Generate conversion status for each touchpoint based on their conversion rates
+conversions <- sapply(visitor_journeys, function(journey) {
+  sapply(journey, function(tp) sample(c(0, 1), 1, prob = c(1 - touchpoint_conversion_rates[tp], touchpoint_conversion_rates[tp])))
+})
+
+
+# Repeat visitor_id and timestamp values for each touchpoint within a visitor's journey
+expanded_data <- lapply(1:150, function(i) {
+  data.frame(
+    visitor_id = rep(visitor_ids[i], 3),
+    timestamp = rep(timestamps[i], 3),
+    journey = visitor_journeys[[i]],
+    conversion_status = conversions[[i]],
+    stringsAsFactors = FALSE
+  )
+})
+
+# Combine the expanded data frames into a single data frame
+synthetic_data <- do.call(rbind, expanded_data)
+synthetic_data %>% head
+# visitor_id           timestamp        journey conversion_status
+# 1          1 2023-01-01 00:04:46 Organic Search                 0
+# 2          1 2023-01-01 00:04:46   Social Media                 0
+# 3          1 2023-01-01 00:04:46          Email                 0
+# 4          2 2023-01-01 00:03:11 Organic Search                 0
+# 5          2 2023-01-01 00:03:11   Social Media                 0
+# 6          2 2023-01-01 00:03:11   Social Media                 0
+
+# Define function to calculate Position-Based (U-Shaped) attribution
+calculate_position_based_attribution <- function(journey, conversion_status) {
+  attribution <- rep(0, length(journey))  # Initialize attribution vector
+  
+  # Assign credit to the first touchpoint
+  attribution[1] <- 0.4
+  
+  # Assign credit to the last touchpoint
+  attribution[length(journey)] <- 0.4
+  
+  # Assign credit to intermediate touchpoints
+  num_intermediate <- length(journey) - 2
+  if (num_intermediate > 0) {
+    attribution[2:(length(journey) - 1)] <- 0.2 / num_intermediate
+  }
+  
+  return(attribution)
+}
+
+# Apply Position-Based (U-Shaped) attribution model to each visitor
+synthetic_data$attribution <- mapply(calculate_position_based_attribution, synthetic_data$journey, synthetic_data$conversion_status)
+
+# Aggregate attribution results
+attribution_summary <- aggregate(synthetic_data$attribution, by = list(Touchpoint = synthetic_data$journey), FUN = sum)
+
+# Plot attribution results
+barplot(attribution_summary$x, names.arg = attribution_summary$Touchpoint, 
+        main = "Position-Based (U-Shaped) Attribution Results", xlab = "Touchpoint", ylab = "Attribution", col = "skyblue")
+
+barplot(attribution_summary$x, names.arg = attribution_summary$Touchpoint, 
+        main = "FPosition-Based (U-Shaped) Attribution Results", xlab = "Touchpoint", ylab = "Conversions", col = rainbow(length(attribution_summary$x)))
+
