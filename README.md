@@ -23,10 +23,10 @@ Also known as the U-shaped model, this attribution model assigns 40% of the cred
 The Position-Based (U-Shaped) attribution model assigns credit to multiple touchpoints along the customer journey, giving more weight to the first and last touchpoints while also considering intermediate touchpoints. This model acknowledges that different touchpoints may play distinct roles in influencing conversions, with the first and last interactions often being the most impactful.
 
 Here's how the Position-Based (U-Shaped) attribution model works:
-1.Assigning Credit: In this model, credit is distributed among multiple touchpoints in the customer journey. The first and last touchpoints typically receive more credit, while intermediate touchpoints also receive some credit.
-2.Weighting Scheme: A common weighting scheme for the Position-Based model is the "U-shaped" or "bathtub-shaped" curve, where the first and last touchpoints each receive 40% of the credit, and the remaining 20% is distributed evenly among the intermediate touchpoints.
-3.Flexibility: The model allows for flexibility in adjusting the weights assigned to different touchpoints based on domain knowledge or data analysis. For example, you may choose to assign more weight to the last touchpoint if it's considered particularly influential in driving conversions.
-4.Interpretability: The Position-Based model provides insights into the relative importance of different touchpoints in the customer journey, making it useful for understanding the customer's path to conversion.
+#### 1.Assigning Credit: In this model, credit is distributed among multiple touchpoints in the customer journey. The first and last touchpoints typically receive more credit, while intermediate touchpoints also receive some credit.
+#### 2.Weighting Scheme: A common weighting scheme for the Position-Based model is the "U-shaped" or "bathtub-shaped" curve, where the first and last touchpoints each receive 40% of the credit, and the remaining 20% is distributed evenly among the intermediate touchpoints.
+#### 3.Flexibility: The model allows for flexibility in adjusting the weights assigned to different touchpoints based on domain knowledge or data analysis. For example, you may choose to assign more weight to the last touchpoint if it's considered particularly influential in driving conversions.
+#### 4.Interpretability: The Position-Based model provides insights into the relative importance of different touchpoints in the customer journey, making it useful for understanding the customer's path to conversion.
 
 Implementing the Position-Based (U-Shaped) attribution model based on the weighting scheme and applying it to assign credit to each touchpoint in the customer journey. Usually my basic outline to implement this model in R:
 
