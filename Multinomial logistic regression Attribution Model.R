@@ -1,7 +1,7 @@
-> # This code is  toy Attribution model for my article. R code example with evaluation and predictions.
-> # Visualizations 
-
-> # Load necessary libraries
+> # This code is a toy Attribution model for my article about Mix Media Modeling and interction with effectiveness of different chanels at 
+> Attribution Modeling. Here is my R code example with evaluation, predictions and visualization. The code easy can be converted to Python.
+> 
+> # 
 > library(nnet) # for multinom function
 > library(pROC) # for ROC curve plotting
 > 
